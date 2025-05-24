@@ -1,0 +1,6 @@
+{
+  "instance_id": "test-vm-001",
+  "api_key": "test-api-key-12345",
+  "metrics_url": "http://localhost:8080/metrics",
+  "collect_interval_seconds": 10
+}

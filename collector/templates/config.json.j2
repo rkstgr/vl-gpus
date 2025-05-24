@@ -1,0 +1,6 @@
+{
+  "instance_id": "{{ instance_id }}",
+  "api_key": "{{ api_key }}",
+  "metrics_url": "{{ metrics_server_url | default('http://your-metrics-server.com:8080/metrics') }}",
+  "collect_interval_seconds": {{ collect_interval | default(60) }}
+}

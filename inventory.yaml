@@ -1,0 +1,5 @@
+# In your inventory or group_vars
+instance_id: "vm-gpu-001"
+api_key: "550e8400-e29b-41d4-a716-446655440000"
+metrics_server_url: "http://your-metrics-server.com:8080/metrics"
+collect_interval: 60
