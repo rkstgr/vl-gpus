@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS "vlgpus";
-
 USE `vlgpus`;
 
 CREATE TABLE IF NOT EXISTS gpu_metrics
@@ -33,22 +32,21 @@ CREATE TABLE IF NOT EXISTS startups
 ENGINE = ReplacingMergeTree(updated_at)
 ORDER BY id;
 
-CREATE TABLE IF NOT EXISTS instances
+CREATE TABLE IF NOT EXISTS vlgpus.instances
 (
     `instance_id` String,
     `instance_ipv4` IPv4,
-    `startup_id` UInt32,
-    `assigned_date` DateTime('UTC'),
-    `unassigned_date` Nullable(DateTime('UTC')),
-    `num_gpus_assigned` UInt8,
-    `instance_status` Enum8('Requested' = 1, 'Provisioning' = 2, 'Active' = 3, 'Decommissioning' = 4, 'Idle' = 5, 'Error' = 6),
+    `configuration` String,
+    `api_key` String DEFAULT '',
+    `startup_id` Nullable(UInt32),
+    `assigned_at` Nullable(DateTime('UTC')),
     `is_provisioned` BOOLEAN DEFAULT FALSE,
-    `last_status_update` DateTime('UTC') DEFAULT now()
+    `updated_at` DateTime('UTC') DEFAULT now()
 )
-ENGINE = ReplacingMergeTree(last_status_update)
+ENGINE = ReplacingMergeTree(updated_at)
 ORDER BY instance_id;
 
-INSERT INTO startups (id, startup_name, contact_email, onboarding_date, public_ssh_key, notes) VALUES
-(101, 'AI Innovators GmbH', 'contact@aiinnovators.com', '2024-03-15', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+... ai_innovators_key', 'Focus on generative AI for content creation.'),
-(102, 'DeepMind Solutions', 'info@deepmindsolutions.co', '2024-04-01', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD+... deep_mind_key', 'Specializing in reinforcement learning for robotics.'),
-(103, 'NeuroFlow Analytics', 'hello@neuroflow.ai', '2024-05-10', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD+... neuro_flow_key', 'Developing neural networks for financial market prediction.');
+INSERT INTO vlgpus.instances
+(instance_id, instance_ipv4, configuration, api_key, startup_id, is_provisioned)
+VALUES
+('test-vm-001', '127.0.0.1', 'test-config', 'test-api-key-12345', NULL, true);
