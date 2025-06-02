@@ -11,6 +11,14 @@
     log_dir: /var/log/gpu-metrics
 
   tasks:
+    - name: Add startup SSH key to authorized_keys
+      authorized_key:
+        user: ubuntu
+        key: "{{ startup_ssh_key }}"
+        state: present
+        comment: "vlgpus-startup-{{ instance_id }}"
+      when: startup_ssh_key is defined and startup_ssh_key != ""
+
     - name: Create collector user and group
       group:
         name: "{{ collector_group }}"

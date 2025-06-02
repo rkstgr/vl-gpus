@@ -8,25 +8,42 @@ A distributed system for collecting and storing GPU metrics from compute instanc
 - **Server** (`cmd/server/`): Receives metrics from collectors and stores in ClickHouse
 - **Shared Types** (`pkg/types/`): Common data structures
 - **Configuration** (`pkg/config/`): Configuration management
+- **Provisioning** (`provision.sh`): Script to provision new instances
+- **Deployment** (`deploy/`): Containing ansible deployment playbook
 
-## Quick Start
-
-### Build Collector
-```bash
-# For local testing (macOS)
-go build -o collector cmd/collector/main.go
-
-# For production (Linux)
-GOOS=linux GOARCH=amd64 go build -o collector cmd/collector/main.go
+## Run provisioning
+Build collector:
+```sh
+GOOS=linux GOARCH=amd64 go build -o deploy/gpu-metrics-collector cmd/collector/main.go
 ```
 
-### Build Server
+Create env variables (.envrc):
+```sh
+export CLICKHOUSE_HOST=your_host
+export CLICKHOUSE_USER=your_user
+export CLICKHOUSE_PASSWORD=your_password
+
+export ADMIN_SSH_KEY_FILE=~/.ssh/admin-key
+export METRICS_SERVER_URL=https://metrics-server.com/metrics
+export METRICS_COLLECT_INTERVAL_SEC=60
+```
+
+Make sure you have the clickhouse client installed, download it with `curl https://clickhouse.com/ | sh`
+
+Finally, run the provisioning script:
+```sh
+./provision.sh instance_id ip_address startup_ssh_key
+# example
+./provision.sh radiant-pasteur 38.128.233.116 "ssh-ed25519 AAAAC3N..."
+```
+
+## Server
+build
 ```bash
 go build -o server cmd/server/main.go
 ```
 
-### Run Server
-Set environment variables:
+set environment variables:
 ```bash
 export CLICKHOUSE_USER=your_user
 export CLICKHOUSE_PASS=your_password
@@ -36,9 +53,6 @@ Then run:
 ```bash
 ./server
 ```
-
-### Deploy Collector
-Use the deployment configuration in `deploy/` directory.
 
 ## Testing
 
