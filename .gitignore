@@ -1,1 +1,3 @@
 .envrc
+deploy/gpu-metrics-collector
+clickhouse
